@@ -7,5 +7,4 @@ export const K = kaboom({
     scale: 1
 })
 
-
 export default K;
