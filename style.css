@@ -3,3 +3,6 @@ body{
     min-width: 100vw;
     margin: 0 auto;
 }
+.Start{
+  background-color: red;  
+}
