@@ -4,6 +4,28 @@ import K from './kaboom.js'
 //background 
 layers(['bg','obj','ui'], 'obj');
 
+loadSprite('space-invader', 'sprites/space-invader.png')
+
+addLevel([
+    '^^^^^^^^^^           ',
+    '^^^^^^^^^^           ',
+    '^^^^^^^^^^           ',
+    '                     ',
+    '                     ',
+    '                     ',
+    '                     ',
+    '                     ',
+    '                     ',
+    '                     ',
+], {
+    width: 100,
+    height: 100,
+    '^': () => [
+        sprite('space-invader'),
+        layer('obj'),
+        scale(0.25)
+    ],
+})
 loadSprite('background', 'sprites/background1.png')
 add([
     sprite('background'),
