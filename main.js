@@ -1,6 +1,6 @@
 // import kaboom lib
 import K from './kaboom.js'
-
+//kaboom()
 loadSprite('background', 'sprites/background1.png')
 add([
     sprite('background'),
