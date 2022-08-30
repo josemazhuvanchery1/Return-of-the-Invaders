@@ -3,6 +3,7 @@ import K from './kaboom.js'
 
 //background 
 layers(['bg','obj','ui'], 'obj');
+
 loadSprite('background', 'sprites/background1.png')
 add([
     sprite('background'),
