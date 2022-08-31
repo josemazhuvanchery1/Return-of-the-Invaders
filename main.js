@@ -11,7 +11,6 @@ loadSprite('background', 'sprites/background1.png')
 loadSprite('spaceship', 'sprites/spaceship.png')
 loadSprite('wall', 'sprites/wall.png')
 
-let count = 0
 //background 
 layers(['bg', 'obj', 'ui'], 'obj');
 
@@ -30,11 +29,11 @@ add([
 //spaceship sprite
 const spaceShip = add([
     {
-        width: 30,
-        height: 30
+        width: 20,
+        height: 20
     },
     sprite('spaceship'),
-    scale(.25),
+    scale(.20),
     pos(width() / 2, height() - 150),
     layer('obj'),
     origin('center'),
@@ -86,7 +85,7 @@ function spawnEnemyBullet(p) {
         origin("center"),
         color(255, 55, 6),
         outline(4),
-        move(DOWN, 400),
+        move(DOWN, 200),
         cleanup(),
         layer('obj'),
         // strings here means a tag
@@ -154,6 +153,12 @@ onCollide('bullet', 'space-invaders', (b, s) => {
         destroy(s),
         score.value++
     score.text = score.value;
+})
+
+
+onCollide('enemyBullet', 'player', (eB, p) => {
+    destroy(p)
+    go('lose_scene', { score: score.value })
 })
 
 const score = add([
