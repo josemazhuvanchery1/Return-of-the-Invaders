@@ -205,6 +205,16 @@ action('space-invaders', (s) => {
     if(rand(100) > 99.9) spawnEnemyBullet(s.pos.add(0, 100))
 })
 
+// Player and left wall collision 
+collides('player', 'leftWall', (p) => {
+    p.move(speed,0)
+})
+
+// Player and right wall collison
+collides('player', 'rightWall', (p) => {
+    p.move(-speed,0)
+})
+
 collides('space-invaders', 'rightWall', () => {
     currSpeed = -invaderSpeed;
     every('space-invaders', (s) => {
