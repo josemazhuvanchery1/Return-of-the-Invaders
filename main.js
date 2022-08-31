@@ -207,11 +207,13 @@ action('space-invaders', (s) => {
 
 // Player and left wall collision 
 collides('player', 'leftWall', (p) => {
+    shake(1);
     p.move(speed,0)
 })
 
 // Player and right wall collison
 collides('player', 'rightWall', (p) => {
+    shake(1);
     p.move(-speed,0)
 })
 
