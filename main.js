@@ -63,7 +63,7 @@ keyDown('left', () =>{
 const bulletSpeed = 1200
 function spawnBullet(p) {
     add([
-        rect(12, 38),
+        rect(12, 28),
         area(),
         pos(p),
         origin("center"),
@@ -152,7 +152,7 @@ timer.action(() => {
 
 const invaderSpeed = 400;
 let currSpeed = invaderSpeed;
-const moveDown = 400
+const moveDown = 900
 action('space-invaders', (s) => {
     s.move(currSpeed, 0)
     
