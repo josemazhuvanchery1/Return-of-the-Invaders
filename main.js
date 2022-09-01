@@ -10,6 +10,9 @@ loadSprite('wall', 'sprites/wall.png')
 loadSprite('wallBarrier', 'sprites/brick.png')
 loadSprite('pBullet', 'sprites/playerBullet.png')
 loadSprite('enemyLayer1', 'sprites/enLayer1.png')
+loadSprite('Boss', 'sprites/mAlien.png')
+loadSprite('bossBullet', 'sprites/bossBullet.png')
+loadSprite('asteroid','sprites/asteroid.png')
 loadSprite('red-laser-fixed', 'sprites/red-laser-fixed.png')
 
 loadSound('shooting','stripes-CC/shootingSound.wav')
@@ -19,7 +22,6 @@ scene('game', () =>{
 onKeyPress("f", (c) => {
     fullscreen(!isFullscreen())
 })
-
 
 //background 
 layers(['bg', 'obj', 'ui'], 'obj');
@@ -110,6 +112,25 @@ function spawnEnemyBullet(p) {
     ])
 }
 
+
+function spawnbossBullet(p) {
+    add([
+        //rect(12, 20),
+        sprite('bossBullet'),
+        scale(.15),
+        area(),
+        pos(p),
+        origin("center"),
+        //color(255, 55, 6),
+        //outline(4),
+        move(DOWN, 500),
+        cleanup(),
+        layer('obj'),
+        // strings here means a tag
+        "enemyBullet",
+    ])
+}
+
 function spawnRedEnemyBullet(p) {
     add([
         //rect(12, 20),
@@ -128,10 +149,43 @@ function spawnRedEnemyBullet(p) {
     ])
 }
 
-//shooting for player at player x,y
-// onKeyPress('k', (s) => {
-//     spawnEnemyBullet(s.pos.add(s.pos.x, s.pos.y))
-// })
+// loop(4, () => {
+//     every("boss", (e) => {
+//       add([
+//         pos(e.pos.add(50, 80)),
+//         move(DOWN, speed),
+//         rect(12, 48),
+//         area(),
+//         outline(4),
+//         cleanup(),
+//         origin("center"),
+//         color(225, 127, 0),
+//         "eBullet",
+//       ]);
+//     });
+//   });
+
+const spaceInvader = () => [
+    sprite('space-invader'),
+    layer('obj'),
+    scale(0.15),
+    pos(100, 0),
+    'space-invaders',
+    area(),
+    spawnEnemyBullet(spaceInvader.pos.x)
+]
+
+const bossInvader = () => [
+    sprite('Boss'),
+    layer('obj'),
+    scale(0.15),
+    pos(100, 0),
+    'boss',
+    area(),
+    spawnbossBullet(bossInvader.pos.x)
+]
+
+
 
 
 
@@ -165,15 +219,23 @@ addLevel([
     ' !              &',
 
 ], {
-    width: 90,
-    height: 40,
+     width: 90,
+     height: 40,
     '^': () => [
         sprite('space-invader'),
         layer('obj'),
-        scale(0.10),
-        pos(0, 0),
+        scale(0.15),
+        pos(0, 20),
         'space-invaders',
         area(),
+    ],
+    '$': () => [
+        sprite('Boss'),scale(0.15),
+                pos(0, 0),
+                layer('obj'),
+                'boss',
+                area(),
+                
     ],
     'r': () => [
         sprite('red-space-invader'),
@@ -183,11 +245,10 @@ addLevel([
         'red-space-invaders',
         area(),
     ],
-    // '!': () => [{width:10, height:1},'leftWall', area()],  //might need to add a sprite for the walls to adjust for differnt scren sizes for collision
-    // '&': () => [{width:10, height:1},'rightWall', area()]
     '!': () => [sprite('wall'), layer('obj'), scale(0.2), 'leftWall', area()],
     '&': () => [sprite('wall'), layer('obj'), scale(0.2), 'rightWall', area()],
-    '*': () => [sprite('wallBarrier'), { width: 1, height: 30 }, layer('obj'), scale(2), 'barrier', area(), health(3)]
+    '*': () => [sprite('asteroid'), {width:1, height:30}, layer('obj'), scale(.4), 'barrier', area(), health(3)],
+     
 
 })
 let count = 0
@@ -218,12 +279,23 @@ onCollide('bullet', 'space-invaders', (b, s) => {
     score.text = score.value;
 })
 
+//let bosslife = 0;
+onCollide('bullet', 'boss', (b, bo) => {
+    shake(6),
+    destroy(b),
+        destroy(bo),
+        score.value++
+        score.text = score.value;
+})
+
+
 onCollide('bullet', 'red-space-invaders', (b, r) => {
     shake(6),
         destroy(b),
         destroy(r),
         score.value++
     score.text = score.value;
+
 })
 
 onCollide('enemyBullet', 'player', (eB, p) => {
@@ -260,10 +332,17 @@ timer.action(() => {
 
 const invaderSpeed = 400;
 let currSpeed = invaderSpeed;
-const moveDown = 450
-
+const moveDown = 400
 let curRedSpeed = 400;
 let redCount = 1;
+
+action('space-invaders',  (s) => {
+    s.move(currSpeed, 0)
+})
+
+action('boss', (s) => {
+  s.move(currSpeed, 0);
+}
 
 action('space-invaders', (s) => {
     s.move(currSpeed, 0)
@@ -303,6 +382,9 @@ action('red-space-invaders', (r) => {
     if (rand(100) > 99.85) spawnRedEnemyBullet(r.pos.add(0, 30))
 })
 
+action('boss', (s) => {
+    if(rand(100) > 99.85) spawnbossBullet(s.pos.add(0, 100))
+})
 // Player and left wall collision 
 collides('player', 'leftWall', (p) => {
     shake(1);
@@ -322,12 +404,31 @@ collides('space-invaders', 'rightWall', () => {
     })
 })
 
+// collides('boss', 'rightWall', () => {
+//     currSpeed = -invaderSpeed;
+//     every('boss', (s) => {
+//         s.move(0, moveDown)
+//     })
+// })
+
 collides('space-invaders', 'leftWall', () => {
     currSpeed = invaderSpeed;
     every('space-invaders', (s) => {
         s.move(0, moveDown)
     })
 })
+
+
+// onCollide('boss', 'leftWall', () => {
+//     currSpeed = invaderSpeed;
+//     every('boss', (s) => {
+//         s.move(0, moveDown)
+//     })
+// })
+
+// spaceShip.overlaps('space-invaders', () => {
+//     go('lose_scene', {score: score.value})
+// })
 
 onCollide("player", "space-invaders", (p) => {
     destroy(p)
