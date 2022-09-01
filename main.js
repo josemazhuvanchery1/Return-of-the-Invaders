@@ -3,12 +3,15 @@ import K from './kaboom.js'
 
 //Sprites
 loadSprite('space-invader', 'sprites/space-invader.png')
+loadSprite('red-space-invader', 'sprites/red-space-invader.png')
 loadSprite('background', 'sprites/background1.png')
 loadSprite('spaceship', 'sprites/spaceship.png')
 loadSprite('wall', 'sprites/wall.png')
 loadSprite('wallBarrier', 'sprites/brick.png')
 loadSprite('pBullet', 'sprites/playerBullet.png')
 loadSprite('enemyLayer1', 'sprites/enLayer1.png')
+loadSprite('red-laser-fixed', 'sprites/red-laser-fixed.png')
+
 loadSound('shooting','stripes-CC/shootingSound.wav')
 
 scene('game', () =>{
@@ -107,6 +110,24 @@ function spawnEnemyBullet(p) {
     ])
 }
 
+function spawnRedEnemyBullet(p) {
+    add([
+        //rect(12, 20),
+        sprite('red-laser-fixed'),
+        scale(.4),
+        area(),
+        pos(p),
+        origin("center"),
+        //color(255, 55, 6),
+        //outline(4),
+        move(DOWN, 500),
+        cleanup(),
+        layer('obj'),
+        // strings here means a tag
+        "enemyBullet",
+    ])
+}
+
 const spaceInvader = () => [
     sprite('space-invader'),
     layer('obj'),
@@ -139,7 +160,7 @@ onKeyPress("space", () => {
 //enemy component
 addLevel([
     ' !$$$$$$$$$$    &',
-    ' !^^^^^^^^^^    &',
+    ' !rrrrrrrrrr    &',
     ' !^^^^^^^^^^    &',
     ' !^^^^^^^^^^    &',
     ' !              &',
@@ -163,27 +184,35 @@ addLevel([
         'space-invaders',
         area(),
     ],
+    'r': () => [
+        sprite('red-space-invader'),
+        layer('obj'),
+        scale(0.1),
+        pos(0, 0),
+        'red-space-invaders',
+        area(),
+    ],
     // '!': () => [{width:10, height:1},'leftWall', area()],  //might need to add a sprite for the walls to adjust for differnt scren sizes for collision
     // '&': () => [{width:10, height:1},'rightWall', area()]
     '!': () => [sprite('wall'), layer('obj'), scale(0.2), 'leftWall', area()],
     '&': () => [sprite('wall'), layer('obj'), scale(0.2), 'rightWall', area()],
-    '*': () => [sprite('wallBarrier'), {width:1, height:30}, layer('obj'), scale(2), 'barrier', area(), health(3)]
-        
+    '*': () => [sprite('wallBarrier'), { width: 1, height: 30 }, layer('obj'), scale(2), 'barrier', area(), health(3)]
+
 })
 let count = 0
-onCollide('bullet', 'barrier', (bu,ba) => {
+onCollide('bullet', 'barrier', (bu, ba) => {
     count++;
     destroy(bu)
-    if(count ==5){
+    if (count == 5) {
         destroy(ba)
         count = 0
     }
 })
 
-onCollide('enemyBullet', 'barrier', (bu,ba) => {
+onCollide('enemyBullet', 'barrier', (bu, ba) => {
     count++;
     destroy(bu)
-    if(count ===5){
+    if (count === 5) {
         destroy(ba)
         count = 0
     }
@@ -198,6 +227,13 @@ onCollide('bullet', 'space-invaders', (b, s) => {
     score.text = score.value;
 })
 
+onCollide('bullet', 'red-space-invaders', (b, r) => {
+    shake(6),
+        destroy(b),
+        destroy(r),
+        score.value++
+    score.text = score.value;
+})
 
 onCollide('enemyBullet', 'player', (eB, p) => {
     destroy(p)
@@ -234,24 +270,58 @@ timer.action(() => {
 const invaderSpeed = 400;
 let currSpeed = invaderSpeed;
 const moveDown = 450
+
+let curRedSpeed = 400;
+let redCount = 1;
+
 action('space-invaders', (s) => {
     s.move(currSpeed, 0)
 })
 
+
+action('red-space-invaders', (r) => {
+    r.move(curRedSpeed, 0)
+})
+
+collides('red-space-invaders', 'rightWall', () => {
+    if (redCount === 1) {
+        curRedSpeed *= -1;
+        every('red-space-invaders', (r) => {
+            r.move(0, 1400)
+        })
+        redCount = 2;
+    }
+})
+
+collides('red-space-invaders', 'leftWall', () => {
+    if (redCount === 2) {
+        curRedSpeed *= -1;
+        every('red-space-invaders', (r) => {
+            r.move(0, 1400)
+        })
+        redCount = 1;
+    }
+})
+
+
 action('space-invaders', (s) => {
-    if(rand(100) > 99.85) spawnEnemyBullet(s.pos.add(0, 100))
+    if (rand(100) > 99.85) spawnEnemyBullet(s.pos.add(0, 100))
+})
+
+action('red-space-invaders', (r) => {
+    if (rand(100) > 99.85) spawnRedEnemyBullet(r.pos.add(0, 30))
 })
 
 // Player and left wall collision 
 collides('player', 'leftWall', (p) => {
     shake(1);
-    p.move(speed,0)
+    p.move(speed, 0)
 })
 
 // Player and right wall collison
 collides('player', 'rightWall', (p) => {
     shake(1);
-    p.move(-speed,0)
+    p.move(-speed, 0)
 })
 
 collides('space-invaders', 'rightWall', () => {
