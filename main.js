@@ -128,15 +128,6 @@ function spawnRedEnemyBullet(p) {
     ])
 }
 
-const spaceInvader = () => [
-    sprite('space-invader'),
-    layer('obj'),
-    scale(0.15),
-    pos(100, 0),
-    'space-invaders',
-    area(),
-    spawnEnemyBullet(spaceInvader.pos.x)
-]
 //shooting for player at player x,y
 // onKeyPress('k', (s) => {
 //     spawnEnemyBullet(s.pos.add(s.pos.x, s.pos.y))
