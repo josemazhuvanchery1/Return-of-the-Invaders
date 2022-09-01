@@ -5,7 +5,7 @@ import K from './kaboom.js'
 loadSprite('spaceship', 'sprites/spaceship.png')
 loadSprite('background', 'sprites/background1.png')
 loadSprite('space-invader','sprites/space-invader.png')
-
+loadSound('shooting','stripes-CC/shootingSound.wav')
 scene('game', () =>{
 
 
@@ -54,6 +54,16 @@ const spaceShip =  add([
     layer('obj'),
     origin('center')
 ])
+// const bossShip =  add([
+//     sprite('marcy'),
+//     scale(0.25),
+//     pos(width()/2, height()-150),
+//     layer('obj'),
+//     origin('center')
+// ])
+// const speed2 = 400
+// bossShip.move(speed2, 0)
+// bossShip.loop = true
 
 
 //spaceship movements
@@ -92,6 +102,9 @@ function spawnBullet(p) {
 
 onKeyPress("space", () => {
     spawnBullet(spaceShip.pos.sub(0,50))
+    let music1 = play('shooting', {
+        volume: 5, 
+    })
 })
 
 })
