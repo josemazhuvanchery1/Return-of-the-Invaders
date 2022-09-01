@@ -10,8 +10,10 @@ loadSprite('space-invader', 'sprites/space-invader.png')
 loadSprite('background', 'sprites/background1.png')
 loadSprite('spaceship', 'sprites/spaceship.png')
 loadSprite('wall', 'sprites/wall.png')
+loadSprite('wallBarrier', 'sprites/brick.png')
+loadSprite('pBullet', 'sprites/playerBullet.png')
+loadSprite('enemyLayer1', 'sprites/enLayer1.png')
 
-let count = 0
 //background 
 layers(['bg', 'obj', 'ui'], 'obj');
 
@@ -30,11 +32,11 @@ add([
 //spaceship sprite
 const spaceShip = add([
     {
-        width: 30,
-        height: 30
+        width: 20,
+        height: 20
     },
     sprite('spaceship'),
-    scale(.25),
+    scale(.20),
     pos(width() / 2, height() - 80),
     layer('obj'),
     origin('center'),
@@ -64,12 +66,14 @@ keyDown('left', () => {
 const bulletSpeed = 1200
 function spawnBullet(p) {
     add([
-        rect(12, 28),
+        //rect(12, 28),
+        sprite('pBullet'),
         area(),
         pos(p),
         origin("center"),
-        color(255, 55, 6),
-        outline(4),
+        //color(221, 160, 221),
+        //outline(4),
+        scale(.3),
         move(UP, bulletSpeed),
         cleanup(),
         layer('obj'),
@@ -80,13 +84,13 @@ function spawnBullet(p) {
 
 function spawnEnemyBullet(p) {
     add([
-        rect(12, 38),
+        rect(12, 20),
         area(),
         pos(p),
         origin("center"),
         color(255, 55, 6),
         outline(4),
-        move(DOWN, 400),
+        move(DOWN, 500),
         cleanup(),
         layer('obj'),
         // strings here means a tag
@@ -117,26 +121,28 @@ onKeyPress("space", () => {
 
 //enemy component
 addLevel([
-    ' !^^^^^^^^^^      &',
-    ' !^^^^^^^^^^      &',
-    ' !^^^^^^^^^^      &',
-    ' !                &',
-    ' !                &',
-    ' !                &',
-    ' !                &',
-    ' !                &',
-    ' !  *     *       &',
-    ' ! * *   * *      &',
-    ' !                &',
+    ' !^^^^^^^^^^    &',
+    ' !^^^^^^^^^^    &',
+    ' !^^^^^^^^^^    &',
+    ' !^^^^^^^^^^    &',
+    ' !              &',
+    ' !              &',
+    ' !              &',
+    ' !              &',
+    ' !              &',
+    ' !              &',
+    ' !  ***    ***  &',
+    ' ! ** **  ** ** &',
+    ' !              &',
 
 ], {
-    width: 80,
-    height: 50,
+    width: 90,
+    height: 40,
     '^': () => [
         sprite('space-invader'),
         layer('obj'),
-        scale(0.15),
-        pos(0, 50),
+        scale(0.10),
+        pos(0, 0),
         'space-invaders',
         area(),
     ],
@@ -144,10 +150,27 @@ addLevel([
     // '&': () => [{width:10, height:1},'rightWall', area()]
     '!': () => [sprite('wall'), layer('obj'), scale(0.2), 'leftWall', area()],
     '&': () => [sprite('wall'), layer('obj'), scale(0.2), 'rightWall', area()],
-    '*': () => [sprite('wall'), layer('obj'), scale(0.2), 'barrier', area()]
+    '*': () => [sprite('wallBarrier'), {width:1, height:30}, layer('obj'), scale(2), 'barrier', area(), health(3)]
         
 })
+let count = 0
+onCollide('bullet', 'barrier', (bu,ba) => {
+    count++;
+    destroy(bu)
+    if(count ==5){
+        destroy(ba)
+        count = 0
+    }
+})
 
+onCollide('enemyBullet', 'barrier', (bu,ba) => {
+    count++;
+    destroy(bu)
+    if(count ===5){
+        destroy(ba)
+        count = 0
+    }
+})
 
 
 onCollide('bullet', 'space-invaders', (b, s) => {
@@ -156,6 +179,12 @@ onCollide('bullet', 'space-invaders', (b, s) => {
         destroy(s),
         score.value++
     score.text = score.value;
+})
+
+
+onCollide('enemyBullet', 'player', (eB, p) => {
+    destroy(p)
+    go('lose_scene', { score: score.value })
 })
 
 const score = add([
@@ -187,13 +216,13 @@ timer.action(() => {
 
 const invaderSpeed = 400;
 let currSpeed = invaderSpeed;
-const moveDown = 400
+const moveDown = 450
 action('space-invaders', (s) => {
     s.move(currSpeed, 0)
 })
 
 action('space-invaders', (s) => {
-    if(rand(100) > 99.9) spawnEnemyBullet(s.pos.add(0, 100))
+   // if(rand(100) > 99.85) spawnEnemyBullet(s.pos.add(0, 100))
 })
 
 collides('space-invaders', 'rightWall', () => {
