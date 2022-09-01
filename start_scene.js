@@ -31,8 +31,8 @@ scene('start_page', () => {
          pos(100),
     ]) 
     onKeyPress('space',() => {
-        // go('game')
-        go('lose')
+         go('game')
+        //go('lose')
     })
 })
     

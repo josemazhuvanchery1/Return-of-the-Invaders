@@ -1,13 +1,6 @@
 // import kaboom lib
 import K from './kaboom.js'
 
-
-scene('game', () =>{
-
-onKeyPress("f", (c) => {
-    fullscreen(!isFullscreen())
-})
-
 //Sprites
 loadSprite('space-invader', 'sprites/space-invader.png')
 loadSprite('background', 'sprites/background1.png')
@@ -17,6 +10,13 @@ loadSprite('wallBarrier', 'sprites/brick.png')
 loadSprite('pBullet', 'sprites/playerBullet.png')
 loadSprite('enemyLayer1', 'sprites/enLayer1.png')
 loadSound('shooting','stripes-CC/shootingSound.wav')
+
+scene('game', () =>{
+
+onKeyPress("f", (c) => {
+    fullscreen(!isFullscreen())
+})
+
 
 //background 
 layers(['bg', 'obj', 'ui'], 'obj');
@@ -201,7 +201,7 @@ onCollide('bullet', 'space-invaders', (b, s) => {
 
 onCollide('enemyBullet', 'player', (eB, p) => {
     destroy(p)
-    go('lose_scene', { score: score.value })
+    go('lose', { score: score.value })
 })
 
 const score = add([
@@ -227,7 +227,7 @@ timer.action(() => {
     timer.time -= dt(),
         timer.text = timer.time.toFixed(2)
     if (timer.time <= 0) {
-        go('lose_scene', { score: score.value })
+        go('lose', { score: score.value })
     }
 })
 
