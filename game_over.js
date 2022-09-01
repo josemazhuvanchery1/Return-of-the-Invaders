@@ -33,14 +33,14 @@ scene("lose", () => {
         
         drawText({
             text: "GAME OVER",
-            pos: p(1, 1.1),
+            pos: p(1, 1.2),
             origin: "center",
             size: w(80, 120, 2),
             color: rgb(w(128, 255, 4), w(128, 255, 8), w(128, 255, 2)),
         })
     })
     add([
-    text(`GAME OVER\n\n     YOUR FINAL SCORE WAS "score"`, {
+    text(`GAME OVER\n\n  SCORE: ${score.value}`, {
         size: 64,
         width: width(),
     }),
@@ -48,14 +48,14 @@ scene("lose", () => {
     ]);
     //adding press space 
      add([
-        text(`PRESS SPACE TO RESTART`, {
+        text(`PRESS ENTER TO RESTART`, {
         size: 32,
         width: width(),
     }),
         pos(width()/2, height()*(3/4)),
     ]);
- onKeyPress('space',() => {
-        go('win')
+ onKeyPress('enter',() => {
+        go('game')
     })
     });
 

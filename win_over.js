@@ -32,8 +32,8 @@ scene("win", () => {
 
     
     drawText({
-        text: "YOU WON!!!!",
-        pos: p(1, 1.1),
+        text: "YOU WON!",
+        pos: p(1, 1.2),
         origin: "center",
         size: w(80, 120, 2),
         color: rgb(w(128, 255, 4), w(128, 255, 8), w(128, 255, 2)),
@@ -41,7 +41,7 @@ scene("win", () => {
 })
 
     add([
-        text(`CONGRATULATIONS!!!, YOU WIN!\n\n       YOUR FINAL SCORE WAS 30!`, {
+        text(`CONGRATULATIONS!!!, YOU WIN!\n\n   YOUR FINAL SCORE WAS 40!`, {
         size: 64,
         width: width(),
         }),
@@ -49,14 +49,14 @@ scene("win", () => {
         ]);
     
     add([
-        text(`PRESS SPACE TO RESTART`, {
+        text(`PRESS ENTER TO RESTART`, {
         size: 32,
         width: width(),
         }),
     pos(width()/2, height()*(3/4)),
     ]);
     
-    onKeyPress('space',() => {
+    onKeyPress('enter',() => {
         go('game')
     })
     });

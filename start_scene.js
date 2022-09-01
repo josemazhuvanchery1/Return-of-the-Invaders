@@ -4,10 +4,6 @@ loadSprite('background', 'sprites/background1.png')
 loadSound('song','stripes-CC/song.mp3')
 scene('start_page', () => {
     //adding music 
-    let music = play('song',{
-        volume: 1,
-        loop: true 
-    })
     add([
         sprite('background'),
         pos(width()/2 , height()/2 ),
@@ -33,6 +29,9 @@ scene('start_page', () => {
     onKeyPress('space',() => {
          go('game')
         //go('lose')
+    })
+    let music = play('song',{
+        volume: 1,
     })
 })
     
