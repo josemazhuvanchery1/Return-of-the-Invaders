@@ -84,12 +84,14 @@ function spawnBullet(p) {
 
 function spawnEnemyBullet(p) {
     add([
-        rect(12, 20),
+        //rect(12, 20),
+        sprite('enemyLayer1'),
+        scale(.4),
         area(),
         pos(p),
         origin("center"),
-        color(255, 55, 6),
-        outline(4),
+        //color(255, 55, 6),
+        //outline(4),
         move(DOWN, 500),
         cleanup(),
         layer('obj'),
@@ -121,7 +123,7 @@ onKeyPress("space", () => {
 
 //enemy component
 addLevel([
-    ' !^^^^^^^^^^    &',
+    ' !$$$$$$$$$$    &',
     ' !^^^^^^^^^^    &',
     ' !^^^^^^^^^^    &',
     ' !^^^^^^^^^^    &',
@@ -222,7 +224,7 @@ action('space-invaders', (s) => {
 })
 
 action('space-invaders', (s) => {
-   // if(rand(100) > 99.85) spawnEnemyBullet(s.pos.add(0, 100))
+    if(rand(100) > 99.85) spawnEnemyBullet(s.pos.add(0, 100))
 })
 
 collides('space-invaders', 'rightWall', () => {
