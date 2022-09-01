@@ -1,10 +1,6 @@
 // import kaboom lib
 import K from './kaboom.js'
 
-onKeyPress("f", (c) => {
-    fullscreen(!isFullscreen())
-})
-
 //Sprites
 loadSprite('space-invader', 'sprites/space-invader.png')
 loadSprite('background', 'sprites/background1.png')
@@ -13,9 +9,18 @@ loadSprite('wall', 'sprites/wall.png')
 loadSprite('wallBarrier', 'sprites/brick.png')
 loadSprite('pBullet', 'sprites/playerBullet.png')
 loadSprite('enemyLayer1', 'sprites/enLayer1.png')
+loadSound('shooting','stripes-CC/shootingSound.wav')
+
+scene('game', () =>{
+
+onKeyPress("f", (c) => {
+    fullscreen(!isFullscreen())
+})
+
 
 //background 
 layers(['bg', 'obj', 'ui'], 'obj');
+
 
 add([
     sprite('background'),
@@ -30,6 +35,7 @@ add([
 ])
 
 //spaceship sprite
+
 const spaceShip = add([
     {
         width: 20,
@@ -44,6 +50,7 @@ const spaceShip = add([
     solid(),
     'player'
 ])
+
 
 //spaceship movements
 const speed = 600;
@@ -117,8 +124,16 @@ const spaceInvader = () => [
 
 
 onKeyPress("space", () => {
+
+    spawnBullet(spaceShip.pos.sub(0,50))
+    let music1 = play('shooting', {
+        volume: 5, 
+    })
     spawnBullet(spaceShip.pos.add(0, -25))
 })
+
+   
+
 
 
 //enemy component
@@ -186,7 +201,7 @@ onCollide('bullet', 'space-invaders', (b, s) => {
 
 onCollide('enemyBullet', 'player', (eB, p) => {
     destroy(p)
-    go('lose_scene', { score: score.value })
+    go('lose', { score: score.value })
 })
 
 const score = add([
@@ -194,7 +209,7 @@ const score = add([
     pos(50, 10),
     layer('ui'),
     {
-        value: 0,
+    value: 0,
     }
 ])
 
@@ -212,7 +227,7 @@ timer.action(() => {
     timer.time -= dt(),
         timer.text = timer.time.toFixed(2)
     if (timer.time <= 0) {
-        go('lose_scene', { score: score.value })
+        go('lose', { score: score.value })
     }
 })
 
@@ -253,15 +268,8 @@ collides('space-invaders', 'leftWall', () => {
     })
 })
 
-// spaceShip.overlaps('space-invaders', () => {
-//     go('lose_scene', {score: score.value})
-// })
 onCollide("player", "space-invaders", (p) => {
     destroy(p)
     go('lose_scene', { score: score.value })
 })
-// action('space-invaders', (s) =>{
-//     if(s.pos.y >= height()){
-//         go('lose_scene', {score: score.value})
-//     }
-// })
+})
