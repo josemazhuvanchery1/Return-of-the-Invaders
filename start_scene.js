@@ -5,9 +5,14 @@ loadSound('song','stripes-CC/song.mp3')
 scene('start_page', () => {
     //adding music 
     let music = play('song',{
-        volume: 1,
+        volume: .5,
         loop: true 
     })
+
+    onKeyPress("f", (c) => {
+        fullscreen(!isFullscreen())
+    })
+
     add([
         sprite('background'),
         pos(width()/2 , height()/2 ),
@@ -24,13 +29,14 @@ scene('start_page', () => {
         fixed()
     ])
     add([
-        text(`WELCOME TO RETURN OF THE SPACE INVADERS: press space to play`, {
+        text(`RETURN OF THE SPACE INVADERS: press space to play`, {
         size: 42,
         width: width(),
         }),
-         pos(100),
+         pos(150, 30),
     ]) 
     onKeyPress('space',() => {
+        music.pause();
          go('game')
         //go('lose')
     })
