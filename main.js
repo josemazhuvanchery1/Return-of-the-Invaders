@@ -12,7 +12,16 @@ loadSprite('enemyLayer1', 'sprites/enLayer1.png')
 loadSprite('Boss', 'sprites/mAlien.png')
 loadSprite('bossBullet', 'sprites/bossBullet.png')
 loadSprite('asteroid', 'sprites/asteroid.png')
-
+loadSprite('reuben', 'sprites/r.png')
+loadSprite('maya', 'sprites/m.png')
+loadSprite('caston', 'sprites/c.png')
+loadSprite('ann', 'sprites/ann.png')
+loadSprite('ana', 'sprites/ana.png')
+loadSprite('jowel', 'sprites/jow.png')
+loadSprite('laura', 'sprites/laura.png')
+loadSprite('motun', 'sprites/motun.png')
+loadSprite('ben', 'sprites/ben.png')
+loadSprite('gon', 'sprites/gon.png')
 loadSound('shooting', 'stripes-CC/shootingSound.wav')
 
 scene('game', () => {
@@ -182,7 +191,7 @@ scene('game', () => {
 
     //enemy component
     addLevel([
-        ' !$$$$$$$$$$    &',
+        ' !gljArmcaMb    &',
         ' !^^^^^^^^^^    &',
         ' !^^^^^^^^^^    &',
         ' !^^^^^^^^^^    &',
@@ -207,8 +216,80 @@ scene('game', () => {
             'space-invaders',
             area(),
         ],
-        '$': () => [
-            sprite('Boss'), scale(0.15),
+        'r': () => [
+            sprite('reuben'),
+            layer('obj'),
+            scale(0.5),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'm': () => [
+            sprite('maya'),
+            layer('obj'),
+            scale(0.34),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'c': () => [
+            sprite('caston'),
+            layer('obj'),
+            scale(0.22),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'A': () => [
+            sprite('ann'),
+            layer('obj'),
+            scale(0.35),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'a': () => [
+            sprite('ana'),
+            layer('obj'),
+            scale(0.60),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'j': () => [
+            sprite('jowel'),
+            layer('obj'),
+            scale(0.60),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'l': () => [
+            sprite('laura'),
+            layer('obj'),
+            scale(0.30),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'M': () => [
+            sprite('motun'),
+            layer('obj'),
+            scale(0.80),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'b': () => [
+            sprite('ben'),
+            layer('obj'),
+            scale(0.3),
+            pos(0, 0),
+            'boss',
+            area(),
+        ],
+        'g': () => [
+            sprite('gon'), scale(0.30),
             pos(0, 0),
             layer('obj'),
             'boss',
@@ -225,7 +306,7 @@ scene('game', () => {
     onCollide('bullet', 'barrier', (bu, ba) => {
         count++;
         destroy(bu)
-        if (count == 5) {
+        if (count == 4) {
             destroy(ba)
             count = 0
         }
@@ -234,7 +315,7 @@ scene('game', () => {
     onCollide('enemyBullet', 'barrier', (bu, ba) => {
         count++;
         destroy(bu)
-        if (count === 5) {
+        if (count === 4) {
             destroy(ba)
             count = 0
         }
@@ -242,7 +323,7 @@ scene('game', () => {
 
 
     onCollide('bullet', 'space-invaders', (b, s) => {
-        shake(6),
+        shake(5),
             destroy(b),
             destroy(s),
             score.value++
@@ -251,16 +332,17 @@ scene('game', () => {
 
     //let bosslife = 0;
     onCollide('bullet', 'boss', (b, bo) => {
-        shake(6),
+        shake(5),
             destroy(b),
             destroy(bo),
             score.value++
         score.text = score.value;
     })
 
-
+    const timeLeft = 25
     onCollide('enemyBullet', 'player', (eB, p) => {
-        destroy(p)
+        destroy(p),
+        destroy(eB),
         go('lose', { score: score.value })
     })
 
@@ -273,7 +355,7 @@ scene('game', () => {
         }
     ])
 
-    const timeLeft = 25
+   
     const timer = add([
         text('0'),
         pos(width() - 300, 10),
@@ -291,7 +373,7 @@ scene('game', () => {
         }
     })
 
-    const invaderSpeed = 200;
+    const invaderSpeed = 400;
     let currSpeed = invaderSpeed;
     const moveDown = 450
 
@@ -303,9 +385,6 @@ scene('game', () => {
         s.move(currSpeed, 0);
     })
 
-    action('space-invaders', (s) => {
-        s.move(currSpeed, 0)
-    })
 
     action('space-invaders', (s) => {
         if (rand(100) > 99.85) spawnEnemyBullet(s.pos.add(0, 100))
@@ -340,8 +419,18 @@ scene('game', () => {
         })
     })
 
+    
+    collides('boss', 'rightWall', () => {
+        currSpeed = -invaderSpeed;
+    })
+
+    collides('boss', 'leftWall', () => {
+        currSpeed = invaderSpeed;
+    })
+
+
     onCollide("player", "space-invaders", (p) => {
         destroy(p)
-        go('lose_scene', { score: score.value })
+        go('lose', { score: score.value })
     })
 })

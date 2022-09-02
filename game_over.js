@@ -17,7 +17,7 @@ scene("lose", (args) => {
             origin("center"),
         ]);
         mark.action(() => {
-            mark.scale = Math.sin(time()) * 3;
+            mark.scale = Math.sin(time()) ;
             mark.angle += dt();
         });
         const t = (n = 1) => time() * n
@@ -31,29 +31,29 @@ scene("lose", (args) => {
 	    const p = (x, y) => vec2(x, y).scale(mx, my).add(px, py)
 
         
-        drawText({
-            text: "GAME OVER",
-            pos: p(1, 1.1),
-            origin: "center",
-            size: w(80, 120, 2),
-            color: rgb(w(128, 255, 4), w(128, 255, 8), w(128, 255, 2)),
-        })
+        // drawText({
+        //     text: "GAME OVER",
+        //     pos: p(1, 1.1),
+        //     origin: "center",
+        //     size: w(80, 120, 2),
+        //     color: rgb(w(128, 255, 4), w(128, 255, 8), w(128, 255, 2)),
+        // })
     })
     add([
-        text(args.score),
-        origin('center'),
+        text(`Score: ${args.score}`),
+        //origin('center'),
         scale(1),
-        pos(width()/2, height()/2)
+        pos(90, 200)
     ])
     //adding press space 
      add([
-        text(`PRESS SPACE TO RESTART`, {
+        text(`PRESS ENTER TO RESTART`, {
         size: 32,
         width: width(),
     }),
-        pos(width()/2, height()*(3/4)),
+        pos(width()-500, height()*(3/4)),
     ]);
- onKeyPress('space',() => {
+ onKeyPress('enter',() => {
         go('game');
     })
     });
