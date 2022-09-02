@@ -20,8 +20,6 @@ scene('game', () => {
     onKeyPress("f", (c) => {
         fullscreen(!isFullscreen())
     })
-
-
     //background 
     layers(['bg', 'obj', 'ui'], 'obj');
 
@@ -194,7 +192,7 @@ scene('game', () => {
         ' !              &',
         ' !              &',
         ' !              &',
-        ' !  ***    ***  &',
+        ' !  **      **  &',
         ' ! ** **  ** ** &',
         ' !              &',
 
@@ -295,7 +293,7 @@ scene('game', () => {
 
     const invaderSpeed = 200;
     let currSpeed = invaderSpeed;
-    const moveDown = 300
+    const moveDown = 450
 
     action('space-invaders', (s) => {
         s.move(currSpeed, 0)
@@ -335,31 +333,12 @@ scene('game', () => {
         })
     })
 
-    // collides('boss', 'rightWall', () => {
-    //     currSpeed = -invaderSpeed;
-    //     every('boss', (s) => {
-    //         s.move(0, moveDown)
-    //     })
-    // })
-
     collides('space-invaders', 'leftWall', () => {
         currSpeed = invaderSpeed;
         every('space-invaders', (s) => {
             s.move(0, moveDown)
         })
     })
-
-
-    // onCollide('boss', 'leftWall', () => {
-    //     currSpeed = invaderSpeed;
-    //     every('boss', (s) => {
-    //         s.move(0, moveDown)
-    //     })
-    // })
-
-    // spaceShip.overlaps('space-invaders', () => {
-    //     go('lose_scene', {score: score.value})
-    // })
 
     onCollide("player", "space-invaders", (p) => {
         destroy(p)

@@ -1,6 +1,6 @@
 
 loadSprite("mark","stripes-CC/gameover2.png");
-scene("lose", () => {
+scene("lose", (args) => {
     //general background
     add([
             sprite('background'),
@@ -40,12 +40,11 @@ scene("lose", () => {
         })
     })
     add([
-    text(`GAME OVER\n\n     YOUR FINAL SCORE WAS "score"`, {
-        size: 64,
-        width: width(),
-    }),
-    pos(50),
-    ]);
+        text(args.score),
+        origin('center'),
+        scale(1),
+        pos(width()/2, height()/2)
+    ])
     //adding press space 
      add([
         text(`PRESS SPACE TO RESTART`, {
@@ -55,7 +54,7 @@ scene("lose", () => {
         pos(width()/2, height()*(3/4)),
     ]);
  onKeyPress('space',() => {
-        go('win')
+        go('game');
     })
     });
 
