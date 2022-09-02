@@ -373,7 +373,7 @@ let lives = 3
 onCollide('enemyBullet', 'player', (eB, p) => {
     shake(6),
     lives--
-    if (lives === 0 ){
+    if (lives === 0){
     destroy(p)
     go('lose', { score: score.value })
     }
