@@ -365,7 +365,7 @@ scene('game', () => {
         },
     ])
 
-let lives = 3
+let lives = 1
     add([
         text(lives),
         pos(1500,100),
