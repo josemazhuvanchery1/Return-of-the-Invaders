@@ -365,6 +365,21 @@ scene('game', () => {
         },
     ])
 
+let lives = 3
+    add([
+        text(lives),
+        pos(1500,100),
+        { update() { this.text = `lives: ${lives}`}},
+onCollide('enemyBullet', 'player', (eB, p) => {
+    shake(6),
+    lives--
+    if (lives === 0 ){
+    destroy(p)
+    go('lose', { score: score.value })
+    }
+})
+])
+
     timer.action(() => {
         timer.time -= dt(),
             timer.text = timer.time.toFixed(2)
@@ -376,6 +391,7 @@ scene('game', () => {
     const invaderSpeed = 400;
     let currSpeed = invaderSpeed;
     const moveDown = 450
+
 
     action('space-invaders', (s) => {
         s.move(currSpeed, 0)
