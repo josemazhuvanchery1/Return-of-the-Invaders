@@ -86,36 +86,28 @@ scene('game', () => {
     const bulletSpeed = 1200
     function spawnBullet(p) {
         add([
-            //rect(12, 28),
             sprite('pBullet'),
             area(),
             pos(p),
             origin("center"),
-            //color(221, 160, 221),
-            //outline(4),
             scale(.3),
             move(UP, bulletSpeed),
             cleanup(),
             layer('obj'),
-            // strings here means a tag
             "bullet",
         ])
     }
 
     function spawnEnemyBullet(p) {
         add([
-            //rect(12, 20),
             sprite('enemyLayer1'),
             scale(.4),
             area(),
             pos(p),
             origin("center"),
-            //color(255, 55, 6),
-            //outline(4),
             move(DOWN, 500),
             cleanup(),
             layer('obj'),
-            // strings here means a tag
             "enemyBullet",
         ])
     }
@@ -123,37 +115,17 @@ scene('game', () => {
 
     function spawnbossBullet(p) {
         add([
-            //rect(12, 20),
             sprite('bossBullet'),
             scale(.15),
             area(),
             pos(p),
             origin("center"),
-            //color(255, 55, 6),
-            //outline(4),
             move(DOWN, 500),
             cleanup(),
             layer('obj'),
-            // strings here means a tag
             "enemyBullet",
         ])
     }
-
-    // loop(4, () => {
-    //     every("boss", (e) => {
-    //       add([
-    //         pos(e.pos.add(50, 80)),
-    //         move(DOWN, speed),
-    //         rect(12, 48),
-    //         area(),
-    //         outline(4),
-    //         cleanup(),
-    //         origin("center"),
-    //         color(225, 127, 0),
-    //         "eBullet",
-    //       ]);
-    //     });
-    //   });
 
     const bossInvader = () => [
         sprite('Boss'),
@@ -342,8 +314,8 @@ scene('game', () => {
     const timeLeft = 25
     onCollide('enemyBullet', 'player', (eB, p) => {
         destroy(p),
-        destroy(eB),
-        go('lose', { score: score.value })
+            destroy(eB),
+            go('lose', { score: score.value })
     })
 
     const score = add([
@@ -355,7 +327,7 @@ scene('game', () => {
         }
     ])
 
-   
+
     const timer = add([
         text('0'),
         pos(width() - 300, 10),
@@ -365,20 +337,20 @@ scene('game', () => {
         },
     ])
 
-let lives = 1
+    let lives = 1
     add([
         text(lives),
-        pos(1500,100),
-        { update() { this.text = `lives: ${lives}`}},
-onCollide('enemyBullet', 'player', (eB, p) => {
-    shake(6),
-    lives--
-    if (lives === 0){
-    destroy(p)
-    go('lose', { score: score.value })
-    }
-})
-])
+        pos(1500, 100),
+        { update() { this.text = `lives: ${lives}` } },
+        onCollide('enemyBullet', 'player', (eB, p) => {
+            shake(6),
+                lives--
+            if (lives === 0) {
+                destroy(p)
+                go('lose', { score: score.value })
+            }
+        })
+    ])
 
     timer.action(() => {
         timer.time -= dt(),
@@ -401,7 +373,6 @@ onCollide('enemyBullet', 'player', (eB, p) => {
         s.move(currSpeed, 0);
     })
 
-
     action('space-invaders', (s) => {
         if (rand(100) > 99.85) spawnEnemyBullet(s.pos.add(0, 100))
     })
@@ -409,6 +380,7 @@ onCollide('enemyBullet', 'player', (eB, p) => {
     action('boss', (s) => {
         if (rand(100) > 99.85) spawnbossBullet(s.pos.add(0, 100))
     })
+
     // Player and left wall collision 
     collides('player', 'leftWall', (p) => {
         shake(1);
@@ -435,7 +407,7 @@ onCollide('enemyBullet', 'player', (eB, p) => {
         })
     })
 
-    
+
     collides('boss', 'rightWall', () => {
         currSpeed = -invaderSpeed;
     })
@@ -443,7 +415,6 @@ onCollide('enemyBullet', 'player', (eB, p) => {
     collides('boss', 'leftWall', () => {
         currSpeed = invaderSpeed;
     })
-
 
     onCollide("player", "space-invaders", (p) => {
         destroy(p)
