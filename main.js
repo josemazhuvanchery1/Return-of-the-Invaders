@@ -30,16 +30,12 @@ scene('game', () => {
     const invaderSpeed = 400;
     let currSpeed = invaderSpeed;
     const moveDown = 450
-    let delayCount = 0;
     const speed = 600;
     let count = 0
     const timeLeft = 25
     let lives = 1
     const bulletSpeed = 1200
 
-    onKeyPress("f", (c) => {
-        fullscreen(!isFullscreen())
-    })
     //background 
     layers(['bg', 'obj', 'ui'], 'obj');
 
@@ -57,7 +53,6 @@ scene('game', () => {
     ])
 
     //spaceship sprite
-
     const spaceShip = add([
         {
             width: 20,
@@ -75,8 +70,11 @@ scene('game', () => {
         'player'
     ])
 
+    //Kaboom JS keyPress
+    onKeyPress("f", (c) => {
+        fullscreen(!isFullscreen())
+    })
 
-    //spaceship movements
     keyDown('right', () => {
 
         if (spaceShip.pos.x < width() - 140) {
@@ -92,7 +90,22 @@ scene('game', () => {
         }
     })
 
-    //bullet component
+    onKeyPress("space", () => {
+        if (spaceShip.can_shoot) {
+            spawnBullet(spaceShip.pos.sub(0, 50))
+            let music1 = play('shooting', {
+                volume: 5,
+            })
+
+            spaceShip.can_shoot = false;
+
+            wait(spaceShip.laser_delay, () => {
+                spaceShip.can_shoot = true;
+            })
+        }
+    })
+
+    //Kaboom JS Functions
     function spawnBullet(p) {
         add([
             sprite('pBullet'),
@@ -121,7 +134,6 @@ scene('game', () => {
         ])
     }
 
-
     function spawnbossBullet(p) {
         add([
             sprite('bossBullet'),
@@ -146,25 +158,7 @@ scene('game', () => {
         spawnbossBullet(bossInvader.pos.x)
     ]
 
-    onKeyPress("space", () => {
-        delayCount++;
-        if (delayCount === 1) {
-            if (spaceShip.can_shoot) {
-                spawnBullet(spaceShip.pos.sub(0, 50))
-                let music1 = play('shooting', {
-                    volume: 5,
-                })
-            }
-            spaceShip.can_shoot = false;
-
-            wait(spaceShip.laser_delay, () => {
-                spaceShip.can_shoot = true;
-                delayCount = 0;
-            })
-        }
-    })
-
-    //enemy component
+    //Kaboom JS Game Map
     addLevel([
         ' !gljArmcaMb    &',
         ' !^^^^^^^^^^    &',
@@ -278,48 +272,7 @@ scene('game', () => {
 
     })
 
-    onCollide('bullet', 'barrier', (bu, ba) => {
-        count++;
-        destroy(bu)
-        if (count == 4) {
-            destroy(ba)
-            count = 0
-        }
-    })
-
-    onCollide('enemyBullet', 'barrier', (bu, ba) => {
-        count++;
-        destroy(bu)
-        if (count === 4) {
-            destroy(ba)
-            count = 0
-        }
-    })
-
-
-    onCollide('bullet', 'space-invaders', (b, s) => {
-        shake(5),
-            destroy(b),
-            destroy(s),
-            score.value++
-        score.text = score.value;
-    })
-
-    //let bosslife = 0;
-    onCollide('bullet', 'boss', (b, bo) => {
-        shake(5),
-            destroy(b),
-            destroy(bo),
-            score.value++
-        score.text = score.value;
-    })
-
-    onCollide('enemyBullet', 'player', (eB, p) => {
-        destroy(p),
-            destroy(eB),
-            go('lose', { score: score.value })
-    })
-
+    //Kaboom JS add() for Text to Game Screen
     const score = add([
         text('0'),
         pos(50, 10),
@@ -328,7 +281,6 @@ scene('game', () => {
             value: 0,
         }
     ])
-
 
     const timer = add([
         text('0'),
@@ -353,6 +305,7 @@ scene('game', () => {
         })
     ])
 
+    //Kaboom JS sprite action()
     timer.action(() => {
         timer.time -= dt(),
             timer.text = timer.time.toFixed(2)
@@ -377,13 +330,12 @@ scene('game', () => {
         if (rand(100) > 99.85) spawnbossBullet(s.pos.add(0, 100))
     })
 
-    // Player and left wall collision 
+    //Kaboom JS "collides" "onCollides" for sprite and player collisions
     collides('player', 'leftWall', (p) => {
         shake(1);
         p.move(speed, 0)
     })
 
-    // Player and right wall collison
     collides('player', 'rightWall', (p) => {
         shake(1);
         p.move(-speed, 0)
@@ -403,7 +355,6 @@ scene('game', () => {
         })
     })
 
-
     collides('boss', 'rightWall', () => {
         currSpeed = -invaderSpeed;
     })
@@ -415,5 +366,45 @@ scene('game', () => {
     onCollide("player", "space-invaders", (p) => {
         destroy(p)
         go('lose', { score: score.value })
+    })
+
+    onCollide('bullet', 'barrier', (bu, ba) => {
+        count++;
+        destroy(bu)
+        if (count == 4) {
+            destroy(ba)
+            count = 0
+        }
+    })
+
+    onCollide('enemyBullet', 'barrier', (bu, ba) => {
+        count++;
+        destroy(bu)
+        if (count === 4) {
+            destroy(ba)
+            count = 0
+        }
+    })
+
+    onCollide('bullet', 'space-invaders', (b, s) => {
+        shake(5),
+            destroy(b),
+            destroy(s),
+            score.value++
+        score.text = score.value;
+    })
+
+    onCollide('bullet', 'boss', (b, bo) => {
+        shake(5),
+            destroy(b),
+            destroy(bo),
+            score.value++
+        score.text = score.value;
+    })
+
+    onCollide('enemyBullet', 'player', (eB, p) => {
+        destroy(p),
+            destroy(eB),
+            go('lose', { score: score.value })
     })
 })
