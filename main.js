@@ -26,6 +26,17 @@ loadSound('shooting', 'stripes-CC/shootingSound.wav')
 
 scene('game', () => {
 
+    //JS Variables
+    const invaderSpeed = 400;
+    let currSpeed = invaderSpeed;
+    const moveDown = 450
+    let delayCount = 0;
+    const speed = 600;
+    let count = 0
+    const timeLeft = 25
+    let lives = 1
+    const bulletSpeed = 1200
+
     onKeyPress("f", (c) => {
         fullscreen(!isFullscreen())
     })
@@ -66,7 +77,6 @@ scene('game', () => {
 
 
     //spaceship movements
-    const speed = 600;
     keyDown('right', () => {
 
         if (spaceShip.pos.x < width() - 140) {
@@ -83,7 +93,6 @@ scene('game', () => {
     })
 
     //bullet component
-    const bulletSpeed = 1200
     function spawnBullet(p) {
         add([
             sprite('pBullet'),
@@ -137,7 +146,6 @@ scene('game', () => {
         spawnbossBullet(bossInvader.pos.x)
     ]
 
-    let delayCount = 0;
     onKeyPress("space", () => {
         delayCount++;
         if (delayCount === 1) {
@@ -146,7 +154,6 @@ scene('game', () => {
                 let music1 = play('shooting', {
                     volume: 5,
                 })
-                spawnBullet(spaceShip.pos.add(0, -25))
             }
             spaceShip.can_shoot = false;
 
@@ -156,10 +163,6 @@ scene('game', () => {
             })
         }
     })
-
-
-
-
 
     //enemy component
     addLevel([
@@ -274,7 +277,7 @@ scene('game', () => {
 
 
     })
-    let count = 0
+
     onCollide('bullet', 'barrier', (bu, ba) => {
         count++;
         destroy(bu)
@@ -311,7 +314,6 @@ scene('game', () => {
         score.text = score.value;
     })
 
-    const timeLeft = 25
     onCollide('enemyBullet', 'player', (eB, p) => {
         destroy(p),
             destroy(eB),
@@ -337,7 +339,6 @@ scene('game', () => {
         },
     ])
 
-    let lives = 1
     add([
         text(lives),
         pos(1500, 100),
@@ -359,11 +360,6 @@ scene('game', () => {
             go('lose', { score: score.value })
         }
     })
-
-    const invaderSpeed = 400;
-    let currSpeed = invaderSpeed;
-    const moveDown = 450
-
 
     action('space-invaders', (s) => {
         s.move(currSpeed, 0)
