@@ -39,7 +39,6 @@ scene('game', () => {
     //background 
     layers(['bg', 'obj', 'ui'], 'obj');
 
-
     add([
         sprite('background'),
         pos(width() / 2, height() / 2),
