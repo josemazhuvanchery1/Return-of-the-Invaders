@@ -28,13 +28,13 @@ scene('game', () => {
 
     //JS Variables
     const invaderSpeed = 400;
-    let currSpeed = invaderSpeed;
     const moveDown = 450
     const speed = 600;
-    let count = 0
     const timeLeft = 25
-    let lives = 1
     const bulletSpeed = 1200
+    let currSpeed = invaderSpeed;
+    let count = 0
+    let lives = 1
 
     //background 
     layers(['bg', 'obj', 'ui'], 'obj');
