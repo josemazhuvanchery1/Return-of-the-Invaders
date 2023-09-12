@@ -1,5 +1,6 @@
 //import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
-import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.js";
+//import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.js";
+import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs"
 
 //initialize kaboom
 export const K = kaboom({
